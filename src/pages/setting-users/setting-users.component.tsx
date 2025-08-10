@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Button } from "devextreme-react/button";
-import { DataGrid, Column} from "devextreme-react/data-grid";
+import { DataGrid, Column } from "devextreme-react/data-grid";
 import AddUserModal from "./components/add-user-modal";
-import { IPostUser } from "./setting-users";
+import { IPostUser, IUser } from "./setting-users";
 
 const MainPage: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [employees, setEmployees] = useState<IPostUser[]>([]);
+  const [employees, setEmployees] = useState<Partial<IUser>[]>([]);
   const [editData, setEditData] = useState<IPostUser | null>(null);
 
   const handleOpenModal = () => {
@@ -26,14 +26,14 @@ const MainPage: React.FC = () => {
 
   const handleFormSubmit = (data: IPostUser) => {
     if (editData) {
-      setEmployees(prev => 
-        prev.map(emp => 
+      setEmployees((prev) =>
+        prev.map((emp) =>
           emp.employeeId === editData.employeeId ? { ...data } : emp
         )
       );
       console.log("updated data:", data);
     } else {
-      setEmployees(prev => [...prev, data]);
+      setEmployees((prev) => [...prev, data]);
       console.log("new user data:", data);
     }
   };
@@ -41,9 +41,9 @@ const MainPage: React.FC = () => {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Employee Management</h1>
-      
-      <Button 
-        text="Yeni Əməkdaş Əlavə Et" 
+
+      <Button
+        text="Yeni Əməkdaş Əlavə Et"
         onClick={handleOpenModal}
         type="default"
         width={200}
@@ -56,20 +56,9 @@ const MainPage: React.FC = () => {
         columnAutoWidth={true}
         keyExpr="employeeId"
       >
-        <Column dataField="employeeId" caption="Employee ID" />
-        <Column dataField="username" caption="İstifadəçi adı" />
-        <Column 
-          caption="Əməliyyatlar"
-          width={120}
-          cellRender={(cellData) => (
-            <Button
-              text="Edit"
-              onClick={() => handleOpenEditModal(cellData.data)}
-              type="default"
-              height={30}
-            />
-          )}
-        />
+        {getEmployeeColumns(handleOpenEditModal).map((col) => (
+          <Column key={col.dataField} {...col} />
+        ))}
       </DataGrid>
 
       <AddUserModal
@@ -86,3 +75,20 @@ const MainPage: React.FC = () => {
 };
 
 export default MainPage;
+
+const getEmployeeColumns = (handleOpenEditModal: (data: IPostUser) => void) => [
+  { dataField: "employeeId", caption: "Employee ID" },
+  { dataField: "username", caption: "İstifadəçi adı" },
+  {
+    caption: "Əməliyyatlar",
+    width: 120,
+    cellRender: (cellData: any) => (
+      <Button
+        text="Edit"
+        onClick={() => handleOpenEditModal(cellData.data)}
+        type="default"
+        height={30}
+      />
+    ),
+  },
+];

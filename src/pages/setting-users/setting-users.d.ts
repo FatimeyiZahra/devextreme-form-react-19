@@ -7,7 +7,7 @@ export interface IUser {
   position: string | null;
   active: boolean | null;
   createdDate: string | null;
-  employeeTypeId: number | null;
+  employeeId: number | null;
   divisionId: number | null;
   division: string | null;
 }

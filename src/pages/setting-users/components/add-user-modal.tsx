@@ -74,7 +74,6 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
       <FormProvider {...methods}>
         <form onSubmit={submit} style={{ padding: "20px" }}>
           <div style={{ marginBottom: "20px" }}>
-            <label>Employee ID</label>
             <RHFDevextreme
               name="employeeId"
               rules={{ required: "Employee ID mütləqdir" }}
@@ -85,54 +84,25 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                 displayExpr: "Name",
                 valueExpr: "ID",
                 width: "100%",
+                placeholder: "Employee ID",
               }}
             />
           </div>
-          {/* <Controller
-            name="employeeId"
-            control={methods.control}
-            rules={{ required: "Employee ID mütləqdir" }}
-            render={({ field }) => (
-              <SelectBox
-                dataSource={products}
-                displayExpr="Name"
-                valueExpr="ID"
-                value={field.value}
-                onValueChanged={(e) => field.onChange(e.value)}
-                width="100%"
-              />
-            )}
-          />
-          {methods.formState.errors.employeeId && (
-            <div style={{ color: "red", fontSize: "12px" }}>
-              {methods.formState.errors.employeeId.message}
-            </div>
-          )} */}
+
           <div style={{ marginBottom: "20px" }}>
-            <label>İstifadəçi adı</label>
-            <Controller
+            <RHFDevextreme
               name="username"
               control={methods.control}
-              rules={{ required: "İstifadəçi adı mütləqdir" }}
-              render={({ field }) => (
-                <TextBox
-                  value={field.value}
-                  onValueChanged={(e) => field.onChange(e.value)}
-                  width="100%"
-                  isValid={!methods.formState.errors.username}
-                />
-              )}
+              component={TextBox}
+              componentProps={{
+                placeholder: "İstifadəçi adı",
+                width: "100%",
+              }}
             />
-            {methods.formState.errors.username && (
-              <div style={{ color: "red", fontSize: "12px" }}>
-                {methods.formState.errors.username.message}
-              </div>
-            )}
           </div>
 
           <div style={{ marginBottom: "20px" }}>
-            <label>Password</label>
-            <Controller
+            <RHFDevextreme
               name="password"
               control={methods.control}
               rules={{
@@ -142,48 +112,31 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                   message: "Parol ən az 5 simvol olmalıdır",
                 },
               }}
-              render={({ field }) => (
-                <TextBox
-                  value={field.value}
-                  onValueChanged={(e) => field.onChange(e.value)}
-                  mode="password"
-                  width="100%"
-                  isValid={!methods.formState.errors.password}
-                />
-              )}
+              component={TextBox}
+              componentProps={{
+                mode: "password",
+                placeholder: "Parol",
+                width: "100%",
+              }}
             />
-            {methods.formState.errors.password && (
-              <div style={{ color: "red", fontSize: "12px" }}>
-                {methods.formState.errors.password.message}
-              </div>
-            )}
           </div>
 
-          <div style={{ marginBottom: "30px" }}>
-            <label>Repeat Password</label>
-            <Controller
+          <div style={{ marginTop: 20 }}>
+            <RHFDevextreme
               name="repeatPassword"
               control={methods.control}
               rules={{
                 required: "Parol təkrar mütləqdir",
-                validate: (value) =>
-                  value === password || "Parollar üst-üstə düşmür",
+                validate: (value: string, formValues: IPostUser) =>
+                  value === formValues.password || "Parollar üst-üstə düşmür",
               }}
-              render={({ field }) => (
-                <TextBox
-                  value={field.value}
-                  onValueChanged={(e) => field.onChange(e.value)}
-                  mode="password"
-                  width="100%"
-                  isValid={!methods.formState.errors.repeatPassword}
-                />
-              )}
+              component={TextBox}
+              componentProps={{
+                mode: "password",
+                placeholder: "Təkrar parol",
+                width: "100%",
+              }}
             />
-            {methods.formState.errors.repeatPassword && (
-              <div style={{ color: "red", fontSize: "12px" }}>
-                {methods.formState.errors.repeatPassword.message}
-              </div>
-            )}
           </div>
 
           <Button text="Submit" type="default" useSubmitBehavior width="100%" />

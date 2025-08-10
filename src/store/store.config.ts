@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import registration from "./reducers/registration.reducer";
-import mainApp from "store/reducers/mainApp.reducer";
+import mainApp from "../store/reducers/mainApp.reducer";
 
 const rootReducer = combineReducers({
   mainApp,
