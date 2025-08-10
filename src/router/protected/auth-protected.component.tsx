@@ -24,9 +24,9 @@ const AuthProtectedComponent = ({children, layout = 'public'}: IAuthProtectedRou
 
     switch (layout) {
         case 'auth':
-            return getToken() ? <Navigate to={Routes.home} replace/> : children;
+            return getToken() ? <Navigate to={Routes.user} replace/> : children;
         case 'public':
-            return getToken() ? children : <Navigate to={Routes.login} replace/>;
+            return getToken() ? children : <Navigate to={Routes.user} replace/>;
   
         default:
             return children;

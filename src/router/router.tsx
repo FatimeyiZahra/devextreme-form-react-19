@@ -5,7 +5,7 @@ import AuthProtectedComponent from "./protected/auth-protected.component";
 import AuthComponent from "../layouts/auth/auth.component";
 import NotfoundComponent from "../pages/not-found/notfound.component";
 import PublicComponent from "../layouts/public/public.component";
-import EmployeeFormModal from "..//pages/setting-users/setting-users.component";
+import UserSetting from "..//pages/setting-users/setting-users.component";
 
 const router = createBrowserRouter(
   [
@@ -21,7 +21,7 @@ const router = createBrowserRouter(
       children: [
         {
           path: Routes.user,
-          element: <EmployeeFormModal />,
+          element: <UserSetting />,
         },
       ],
     },

@@ -1,96 +1,88 @@
 import React, { useState } from "react";
 import { Button } from "devextreme-react/button";
-import { Popup } from "devextreme-react/popup";
-import {
-  Form,
-  SimpleItem,
-  Label,
-  RequiredRule,
-  PatternRule,
-  CompareRule,
-} from "devextreme-react/form";
+import { DataGrid, Column} from "devextreme-react/data-grid";
+import AddUserModal from "./components/add-user-modal";
 import { IPostUser } from "./setting-users";
 
-const initialFormData: IPostUser = {
-  employeeId: null,
-  username: null,
-  password: null,
-  repeatPassword: null,
-};
+const MainPage: React.FC = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [employees, setEmployees] = useState<IPostUser[]>([]);
+  const [editData, setEditData] = useState<IPostUser | null>(null);
 
-const EmployeeFormModal = () => {
-  const [visible, setVisible] = useState(false);
-  const [formData, setFormData] = useState<IPostUser>(initialFormData);
+  const handleOpenModal = () => {
+    setEditData(null);
+    setModalVisible(true);
+  };
 
-  const openModal = () => setVisible(true);
-  const closeModal = () => setVisible(false);
+  const handleOpenEditModal = (rowData: IPostUser) => {
+    setEditData(rowData);
+    setModalVisible(true);
+  };
 
-  const onSubmit = () => {
-    console.log("Form Data:", formData);
-    closeModal();
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setEditData(null);
+  };
+
+  const handleFormSubmit = (data: IPostUser) => {
+    if (editData) {
+      setEmployees(prev => 
+        prev.map(emp => 
+          emp.employeeId === editData.employeeId ? { ...data } : emp
+        )
+      );
+      console.log("updated data:", data);
+    } else {
+      setEmployees(prev => [...prev, data]);
+      console.log("new user data:", data);
+    }
   };
 
   return (
-    <>
-      <Button text="Formu Aç" onClick={openModal} />
+    <div style={{ padding: "20px" }}>
+      <h1>Employee Management</h1>
+      
+      <Button 
+        text="Yeni Əməkdaş Əlavə Et" 
+        onClick={handleOpenModal}
+        type="default"
+        width={200}
+        style={{ marginBottom: "20px" }}
+      />
 
-      <Popup
-        visible={visible}
-        onHiding={closeModal}
-        dragEnabled={false}
-        showTitle={true}
-        title="Employee Form"
-        width={400}
-        height={400}
+      <DataGrid
+        dataSource={employees}
+        showBorders={true}
+        columnAutoWidth={true}
+        keyExpr="employeeId"
       >
-        <Form
-          formData={formData}
-          onFieldDataChanged={(e) =>
-            setFormData(e.component.option("formData"))
-          }
-          colCount={1}
-          labelLocation="top"
-        >
-          <SimpleItem dataField="employeeId" editorType="dxNumberBox">
-            <Label text="Employee ID" />
-            <RequiredRule message="Employee ID mütləqdir" />
-          </SimpleItem>
-
-          <SimpleItem dataField="username">
-            <Label text="Username" />
-            <RequiredRule message="Username mütləqdir" />
-          </SimpleItem>
-
-          <SimpleItem
-            dataField="password"
-            editorType="dxTextBox"
-            editorOptions={{ mode: "password" }}
-          >
-            <Label text="Password" />
-            <RequiredRule message="Password mütləqdir" />
-            <PatternRule
-              pattern={/^.{5,}$/}
-              message="Parol ən az 5 simvol olmalıdır"
+        <Column dataField="employeeId" caption="Employee ID" />
+        <Column dataField="username" caption="İstifadəçi adı" />
+        <Column 
+          caption="Əməliyyatlar"
+          width={120}
+          cellRender={(cellData) => (
+            <Button
+              text="Edit"
+              onClick={() => handleOpenEditModal(cellData.data)}
+              type="default"
+              height={30}
             />
-          </SimpleItem>
+          )}
+        />
+      </DataGrid>
 
-          <SimpleItem
-            dataField="repeatPassword"
-            editorType="dxTextBox"
-            editorOptions={{ mode: "password" }}
-          >
-            <Label text="Repeat Password" />
-            <RequiredRule message="Parol təkrar mütləqdir" />
-            <CompareRule
-              comparisonTarget={() => formData.password}
-              message="Parollar üst-üstə düşmür"
-            />
-          </SimpleItem>
-        </Form>
-        <Button text="Submit" type="default" onClick={onSubmit} />
-      </Popup>
-    </>
+      <AddUserModal
+        visible={modalVisible}
+        onClose={handleCloseModal}
+        onSubmit={handleFormSubmit}
+        editData={editData}
+        title={editData ? "Əməkdaşı Redaktə Et" : "Yeni Əməkdaş Əlavə Et"}
+        width={450}
+        height={550}
+      />
+    </div>
   );
 };
 
-export default EmployeeFormModal;
+export default MainPage;

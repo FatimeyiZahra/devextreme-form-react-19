@@ -1,5 +1,4 @@
 import { Button } from "antd";
-import notFound from "../../assets/images/statics/404.svg";
 import { useNotfoundStyles } from "./notfound.style";
 import { useNavigate } from "react-router-dom";
 
@@ -22,7 +21,6 @@ const NotfoundComponent = () => {
           Ana səhifəyə qayıt
         </Button>
       </div>
-      <img src={notFound} alt="notfound" />
     </div>
   );
 };
